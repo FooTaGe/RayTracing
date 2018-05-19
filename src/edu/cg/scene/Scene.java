@@ -196,7 +196,9 @@ public class Scene {
 	}
 	
 	private Vec calcColor(Ray ray, int recusionLevel) {
-		//TODO: implement this method
-		throw new UnimplementedMethodException("calcColor(Ray, int)");
+		if(maxRecursionLevel < recusionLevel){
+			return new Vec(0, 0, 0);
+		}
+
 	}
 }

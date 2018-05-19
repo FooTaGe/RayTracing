@@ -50,6 +50,6 @@ public class Hit implements Comparable<Hit> {
 	
 	@Override
 	public int compareTo(Hit other) {
-		return t < other.t ? -1 : (t > other.t ? 1 : 0);
+		return Double.compare(t, other.t);
 	}
 }

@@ -1,5 +1,7 @@
 package edu.cg.scene.lightSources;
 
+import edu.cg.algebra.Point;
+import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
 
 public abstract class Light {
@@ -17,4 +19,7 @@ public abstract class Light {
 	}
 	
 	//TODO: add some methods
+	public abstract Ray rayToLight(Point point);
+
+	public abstract Vec calcLightIntesity(Point point);
 }

@@ -11,9 +11,7 @@ import java.util.concurrent.Future;
 
 import edu.cg.Logger;
 import edu.cg.UnimplementedMethodException;
-import edu.cg.algebra.Point;
-import edu.cg.algebra.Ray;
-import edu.cg.algebra.Vec;
+import edu.cg.algebra.*;
 import edu.cg.scene.lightSources.Light;
 import edu.cg.scene.objects.Surface;
 
@@ -196,9 +194,72 @@ public class Scene {
 	}
 	
 	private Vec calcColor(Ray ray, int recusionLevel) {
-		if(maxRecursionLevel < recusionLevel){
+		if(maxRecursionLevel <= recusionLevel){
 			return new Vec(0, 0, 0);
 		}
+        Hit hit = findIntersection(ray);
+        Vec ans;
+		if (hit != null){
+		    ans = calcLocalColor(ray, hit);
+            Surface hitSurface = hit.getSurface();
+		    if(renderRefarctions){
+                //Vec refractedVec = Ops.refract(ray.direction(), hit.getNormalToSurface(), hit.getSurface().n1(hit), hit.getSurface().n2(hit));
+                //Ray refractedRay = new Ray(ray.getHittingPoint(hit), refractedVec);
+                //ans.add(refactedColor);
+                //Todo
+            }
 
+            if(renderReflections){
+                Vec reflectedVec = Ops.reflect(ray.direction(), hit.getNormalToSurface());
+                Ray reflectedRay = new Ray(ray.getHittingPoint(hit), reflectedVec);
+                Vec reflectedColor = calcColor(reflectedRay, ++recusionLevel).mult(hitSurface.Ks().mult(hitSurface.reflectionIntensity()));
+                ans.add(reflectedColor);
+            }
+        }
+
+        else {
+            ans = backgroundColor;
+        }
+
+		return ans;
 	}
+
+    private Hit findIntersection(Ray ray) {
+        Hit minHit = new Hit(Integer.MAX_VALUE, new Vec(0, 0,0));
+	    for (Surface surface: surfaces) {
+            Hit curr = surface.intersect(ray);
+            if(curr != null){
+                minHit = curr.compareTo(minHit) == -1 ? curr : minHit;
+            }
+        }
+        return minHit.t() != Integer.MAX_VALUE ? minHit : null;
+    }
+
+    private Vec calcLocalColor(Ray ray, Hit hit) {
+        Surface hitSurface = hit.getSurface();
+        //calc ambient
+	    Vec ans = hitSurface.Ka().mult(ambient);
+	    //diffuse & specular
+        Vec temp;
+        for (Light lightSource: this.lightSources) {
+            if(shadowed(ray.getHittingPoint(hit), lightSource)){
+                continue;
+            }
+            temp = calcDiffuse(hit, lightSource);
+            temp.add(calcSpecular(hit, lightSource, ray));
+            temp.mult(lightSource.calcLightIntesity(ray.getHittingPoint(hit)));
+            ans.add(temp);
+        }
+        return ans;
+    }
+
+    private boolean shadowed(Point hittingPoint, Light lightSource) {
+	    Ray rayToLight = lightSource.rayToLight(hittingPoint);
+        for (Surface currSurface:this.surfaces) {
+            if(currSurface.intersect(rayToLight) != null){
+                return true;
+            }
+        }
+        return false;
+    }
 }

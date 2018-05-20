@@ -42,4 +42,12 @@ public class Spotlight extends PointLight {
 	}
 	
 	//TODO: add some methods
+
+
+    @Override
+    public Vec calcLightIntensity(Point point) {
+	    Vec D = direction.normalize();
+	    Vec L = rayToLight(point).direction().neg().normalize();
+        return super.calcLightIntensity(point).mult(D.dot(L));
+    }
 }

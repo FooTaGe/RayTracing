@@ -1,6 +1,7 @@
 package edu.cg.scene.lightSources;
 
 import edu.cg.algebra.Point;
+import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
 
 public class PointLight extends Light {
@@ -28,7 +29,7 @@ public class PointLight extends Light {
 	public PointLight initIntensity(Vec intensity) {
 		return (PointLight)super.initIntensity(intensity);
 	}
-	
+
 	public PointLight initPosition(Point position) {
 		this.position = position;
 		return this;
@@ -42,4 +43,18 @@ public class PointLight extends Light {
 	}
 
 	//TODO: add some methods
+
+
+    @Override
+    public Ray rayToLight(Point point) {
+        return new Ray(point, this.position);
+    }
+
+    @Override
+    public Vec calcLightIntensity(Point point) {
+        double dist = point.dist(this.position);
+        double decay = kc + dist * (kl + kq * dist);
+        return intensity.mult(1.0 /decay);
+    }
+
 }

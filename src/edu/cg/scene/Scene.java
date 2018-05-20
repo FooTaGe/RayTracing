@@ -10,7 +10,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import edu.cg.Logger;
-import edu.cg.UnimplementedMethodException;
 import edu.cg.algebra.*;
 import edu.cg.scene.lightSources.Light;
 import edu.cg.scene.objects.Surface;
@@ -247,7 +246,7 @@ public class Scene {
             }
             temp = calcDiffuse(hit, lightSource, ray.getHittingPoint(hit));
             temp.add(calcSpecular(hit, lightSource, ray));
-            temp.mult(lightSource.calcLightIntesity(ray.getHittingPoint(hit)));
+            temp.mult(lightSource.calcLightIntensity(ray.getHittingPoint(hit)));
             ans.add(temp);
         }
         return ans;

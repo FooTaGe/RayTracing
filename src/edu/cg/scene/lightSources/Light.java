@@ -21,5 +21,5 @@ public abstract class Light {
 	//TODO: add some methods
 	public abstract Ray rayToLight(Point point);
 
-	public abstract Vec calcLightIntesity(Point point);
+	public abstract Vec calcLightIntensity(Point point);
 }

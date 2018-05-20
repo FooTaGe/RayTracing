@@ -1,11 +1,7 @@
 package edu.cg.scene.objects;
 
 import edu.cg.UnimplementedMethodException;
-import edu.cg.algebra.Hit;
-import edu.cg.algebra.Mat3x3;
-import edu.cg.algebra.Point;
-import edu.cg.algebra.Ray;
-import edu.cg.algebra.Vec;
+import edu.cg.algebra.*;
 
 public class Plain extends Shape {
 	//implicit form of a plain: ax + by + cz + d = 0;
@@ -108,7 +104,15 @@ public class Plain extends Shape {
 
 	@Override
 	public Hit intersect(Ray ray) {
-		//TODO: implement this method.
-		throw new UnimplementedMethodException("intersect(Ray)");
+		this.normal = normal();
+		this.zero = zero();
+		Point p0 = ray.source();
+		Vec v = ray.direction().normalize();
+		double t = normal.dot((this.zero.sub(p0)).mult(1 / (normal.dot(v))));
+		Point p =  p0.add(v.mult(t));
+		double distance = p.sub(p0).length();
+		Vec norm = p.sub(p0).normalize();
+		Hit intersection = distance < Ops.infinity && distance > Ops.epsilon ? new Hit(distance, norm) : null;
+		return  intersection;
 	}
 }

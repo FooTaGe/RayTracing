@@ -245,12 +245,32 @@ public class Scene {
             if(shadowed(ray.getHittingPoint(hit), lightSource)){
                 continue;
             }
-            temp = calcDiffuse(hit, lightSource);
+            temp = calcDiffuse(hit, lightSource, ray.getHittingPoint(hit));
             temp.add(calcSpecular(hit, lightSource, ray));
             temp.mult(lightSource.calcLightIntesity(ray.getHittingPoint(hit)));
             ans.add(temp);
         }
         return ans;
+    }
+
+    private Vec calcSpecular(Hit hit, Light lightSource, Ray ray) {
+        Vec V = ray.direction().neg().normalize();
+        Vec N = hit.getNormalToSurface().normalize();
+        Vec L = lightSource.rayToLight(ray.getHittingPoint(hit)).direction();
+        Vec R = Ops.reflect(L.neg(), N).normalize();
+        double dotP = Math.max(V.dot(R), 0.0);
+        return hit.getSurface().Ks().mult(Math.pow(dotP, hit.getSurface().shininess()));
+
+
+    }
+
+    private Vec calcDiffuse(Hit hit, Light lightSource, Point hitPoint) {
+	    Vec normSurfaceNormal = hit.getNormalToSurface().normalize();
+	    Ray rayToLight = lightSource.rayToLight(hitPoint);
+	    Vec normVecToLight = rayToLight.direction().normalize();
+	    double dotProduct = normSurfaceNormal.dot(normVecToLight);
+	    dotProduct = Math.max(dotProduct, 0.0);
+	    return hit.getSurface().Kd(hitPoint).mult(dotProduct);
     }
 
     private boolean shadowed(Point hittingPoint, Light lightSource) {

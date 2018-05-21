@@ -4,10 +4,11 @@ import edu.cg.UnimplementedMethodException;
 import edu.cg.algebra.Hit;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
+import edu.cg.algebra.Vec;
 
 public class Triangle extends Shape {
 	private Point p1, p2, p3;
-	
+	private transient Plain myPlain;
 	public Triangle() {
 		p1 = p2 = p3 = null;
 	}
@@ -30,6 +31,18 @@ public class Triangle extends Shape {
 	@Override
 	public Hit intersect(Ray ray) {
 		//TODO: implement this method.
-		throw new UnimplementedMethodException("intersect(Ray)");
+		Hit planeHit = getMyPlain().intersect(ray);
+		if(planeHit != null){
+		    //TODO is within triangle
+        }
 	}
+
+	private synchronized Plain getMyPlain(){
+	    if (myPlain == null){
+	        Vec normal = p2.sub(p1).cross(p3.sub(p1)).normalize();
+	        myPlain = new Plain(normal, p1);
+        }
+
+        return myPlain;
+    }
 }

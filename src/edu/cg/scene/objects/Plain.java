@@ -81,6 +81,10 @@ public class Plain extends Shape {
 		return zero;
 	}
 
+	private Vec hitNormal(Ray r){
+	    return r.direction().dot(this.normal()) < 0.0 ? this.normal() : this.normal().neg();
+    }
+
 	@Override
 	public Vec getDiffuseCoefficient(Material material, Point p) {
 		if(!material.isCheckerBoard)
@@ -104,15 +108,9 @@ public class Plain extends Shape {
 
 	@Override
 	public Hit intersect(Ray ray) {
-		this.normal = normal();
-		this.zero = zero();
-		Point p0 = ray.source();
-		Vec v = ray.direction().normalize();
-		double t = normal.dot((this.zero.sub(p0)).mult(1 / (normal.dot(v))));
-		Point p =  p0.add(v.mult(t));
-		double distance = p.sub(p0).length();
-		Vec norm = p.sub(p0).normalize();
-		Hit intersection = distance < Ops.infinity && distance > Ops.epsilon ? new Hit(distance, norm) : null;
-		return  intersection;
+        Vec partialVec = new Vec(this.a, this.b, this.c);
+        double ttemp = -partialVec.dot(ray.source().toVec()) + this.d;
+        double t = ttemp / ray.direction().dot(partialVec);
+        return t < Ops.infinity && t > Ops.epsilon ? new Hit(t, hitNormal(ray)): null;
 	}
 }

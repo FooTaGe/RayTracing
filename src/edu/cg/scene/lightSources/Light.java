@@ -3,6 +3,7 @@ package edu.cg.scene.lightSources;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
+import edu.cg.scene.objects.Surface;
 
 public abstract class Light {
 	protected Vec intensity = new Vec(1, 1, 1); //white color
@@ -22,4 +23,8 @@ public abstract class Light {
 	public abstract Ray rayToLight(Point point);
 
 	public abstract Vec calcLightIntensity(Point point);
+
+    public abstract boolean shadowedBy(Surface currSurface, Ray rayToLight);
+
+
 }

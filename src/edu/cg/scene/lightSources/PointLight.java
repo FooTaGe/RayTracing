@@ -1,8 +1,10 @@
 package edu.cg.scene.lightSources;
 
+import edu.cg.algebra.Hit;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
+import edu.cg.scene.objects.Surface;
 
 public class PointLight extends Light {
 	protected Point position;
@@ -56,5 +58,24 @@ public class PointLight extends Light {
         double decay = kc + dist * (kl + kq * dist);
         return intensity.mult(1.0 /decay);
     }
+
+    @Override
+    public boolean shadowedBy(Surface currSurface, Ray rayToLight) {
+        Hit hitSurface = currSurface.intersect(rayToLight);
+        if(hitSurface != null){
+            Point raySource = rayToLight.source();
+            Point surfaceHitPoint = rayToLight.getHittingPoint(hitSurface);
+            //check who is farther
+            if (raySource.distSqr(surfaceHitPoint) < raySource.distSqr(this.position)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+
+
 
 }

@@ -1,7 +1,9 @@
 package edu.cg.scene.lightSources;
 
 import edu.cg.algebra.Point;
+import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
+import edu.cg.scene.objects.Surface;
 
 public class Spotlight extends PointLight {
 	private Vec direction;
@@ -50,4 +52,15 @@ public class Spotlight extends PointLight {
 	    Vec L = rayToLight(point).direction().neg().normalize();
         return super.calcLightIntensity(point).mult(D.dot(L));
     }
+
+
+    @Override
+    public boolean shadowedBy(Surface currSurface, Ray rayToLight) {
+        if (rayToLight.direction().neg().dot(this.direction.normalize()) < this.angle) {
+            return true;
+        }
+        return super.shadowedBy(currSurface, rayToLight);
+
+    }
+
 }

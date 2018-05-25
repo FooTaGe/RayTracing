@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import edu.cg.Logger;
+import edu.cg.UnimplementedMethodException;
 import edu.cg.algebra.*;
 import edu.cg.scene.lightSources.Light;
 import edu.cg.scene.objects.Intersectable;
@@ -192,7 +193,7 @@ public class Scene {
 			return calcColor(ray, 0).toColor();
 		});
 	}
-	
+
 	private Vec calcColor(Ray ray, int recusionLevel) {
 		if(maxRecursionLevel <= recusionLevel){
 			return new Vec(0, 0, 0);
@@ -207,6 +208,7 @@ public class Scene {
                 //Ray refractedRay = new Ray(ray.getHittingPoint(hit), refractedVec);
                 //ans.add(refactedColor);
                 //Todo
+                throw new UnimplementedMethodException("Refraction was not implemented");
             }
 
             if(renderReflections){
@@ -223,6 +225,10 @@ public class Scene {
 
 		return ans;
 	}
+
+
+
+
 
     private Hit findIntersection(Ray ray) {
         Hit minHit = new Hit(Integer.MAX_VALUE, new Vec(0, 0,0));
@@ -276,10 +282,15 @@ public class Scene {
     private boolean shadowed(Point hittingPoint, Light lightSource) {
 	    Ray rayToLight = lightSource.rayToLight(hittingPoint);
         for (Surface currSurface:this.surfaces) {
-            if(currSurface.intersect(rayToLight) != null){
+            if(!lightSource.shadowedBy(currSurface, rayToLight)){
                 return true;
             }
         }
         return false;
     }
+
+
+    //changed
+
+
 }

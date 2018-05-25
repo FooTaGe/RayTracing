@@ -109,8 +109,12 @@ public class Plain extends Shape {
 	@Override
 	public Hit intersect(Ray ray) {
         Vec partialVec = new Vec(this.a, this.b, this.c);
-        double ttemp = -partialVec.dot(ray.source().toVec()) + this.d;
-        double t = ttemp / ray.direction().dot(partialVec);
-        return t < Ops.infinity && t > Ops.epsilon ? new Hit(t, hitNormal(ray)): null;
+        double t = (- (partialVec.dot(ray.source().toVec()) + this.d)) / ray.direction().dot(partialVec);
+        return t > Ops.epsilon & t < Ops.infinity ? new Hit(t, this.hitNormal(ray)) : null;
 	}
+
+
+    public double getD() {
+	    return this.d;
+    }
 }

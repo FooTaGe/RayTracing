@@ -3,6 +3,7 @@ package edu.cg.scene.lightSources;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
+import edu.cg.scene.objects.Surface;
 
 public class DirectionalLight extends Light {
 	private Vec direction = new Vec(0, -1, -1);
@@ -36,5 +37,14 @@ public class DirectionalLight extends Light {
 	public Vec calcLightIntensity(Point point) {
 		return super.intensity;
 	}
+
+    @Override
+    public boolean shadowedBy(Surface currSurface, Ray rayToLight) {
+        if(currSurface.intersect(rayToLight) == null){
+            return true;
+        }
+        return false;
+    }
+
 
 }

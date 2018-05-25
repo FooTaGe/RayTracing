@@ -28,12 +28,20 @@ public class Sphere extends Shape {
 		this.center = center;
 		return this;
 	}
+
+	public Point getCenter(){
+	    return this.center;
+    }
+
+    public double getRadius(){
+        return this.radius;
+    }
 	
 	public Sphere initRadius(double radius) {
 		this.radius = radius;
 		return this;
 	}
-	
+
 	@Override
 	public Hit intersect(Ray ray) {
 		Vec L = center.sub(ray.source());
@@ -67,4 +75,7 @@ public class Sphere extends Shape {
 	private Vec getNormalAtPoint(Point p) {
 		return p.sub(this.center).normalize();
 	}
+
+
+
 }

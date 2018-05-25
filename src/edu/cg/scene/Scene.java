@@ -12,6 +12,7 @@ import java.util.concurrent.Future;
 import edu.cg.Logger;
 import edu.cg.algebra.*;
 import edu.cg.scene.lightSources.Light;
+import edu.cg.scene.objects.Intersectable;
 import edu.cg.scene.objects.Surface;
 
 public class Scene {
@@ -212,7 +213,7 @@ public class Scene {
                 Vec reflectedVec = Ops.reflect(ray.direction(), hit.getNormalToSurface());
                 Ray reflectedRay = new Ray(ray.getHittingPoint(hit), reflectedVec);
                 Vec reflectedColor = calcColor(reflectedRay, ++recusionLevel).mult(hitSurface.Ks().mult(hitSurface.reflectionIntensity()));
-                ans.add(reflectedColor);
+                ans = ans.add(reflectedColor);
             }
         }
 
@@ -245,9 +246,9 @@ public class Scene {
                 continue;
             }
             temp = calcDiffuse(hit, lightSource, ray.getHittingPoint(hit));
-            temp.add(calcSpecular(hit, lightSource, ray));
-            temp.mult(lightSource.calcLightIntensity(ray.getHittingPoint(hit)));
-            ans.add(temp);
+            temp = temp.add(calcSpecular(hit, lightSource, ray));
+            temp = temp.mult(lightSource.calcLightIntensity(ray.getHittingPoint(hit)));
+            ans = ans.add(temp);
         }
         return ans;
     }

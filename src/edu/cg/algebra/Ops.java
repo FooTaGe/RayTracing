@@ -94,8 +94,8 @@ public class Ops {
 	}
 	
 	public static Vec reflect(Vec u, Vec normal) {
-		//TODO: implement
-		throw new UnimplementedMethodException("Ops.reflect(Vec, Vec)");
+		return u.add(normal.mult(-2).mult(u.dot(normal)));
+		// Rr = u - 2 Normal (u . Normal)
 	}
 	
 	public static Vec refract(Vec u, Vec normal, double n1, double n2) {

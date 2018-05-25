@@ -85,7 +85,14 @@ public class Mesh extends Shape implements Iterable<Triangle> {
     }
     @Override
     public Hit intersect(Ray ray) {
-        throw new UnimplementedMethodException("shit got real");
+        for (Triangle triangle: this) {
+            Hit hit = triangle.intersect(ray);
+            if (hit != null){
+                return hit;
+            }
+        }
+        return null;
+
     }
 
 }

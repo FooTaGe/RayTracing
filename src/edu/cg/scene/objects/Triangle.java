@@ -66,15 +66,4 @@ public class Triangle extends Shape {
         }
 
     }
-
-    //changed
-//    @Override
-//    public Hit intersect(Ray ray) {
-//	    //changed
-//        Hit hit = getMyPlain().intersect(ray);
-//        if (hit != null && this.isInside(ray, hit)) {
-//            return hit;
-//        }
-//        return null;
-//    }
 }
